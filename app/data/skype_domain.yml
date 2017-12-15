@@ -1,0 +1,34 @@
+##slots:
+
+intents:
+ - greet
+ - affirm
+ - deny
+ - negative
+ - thanks
+ - goodbye
+ - contact
+
+##entities:
+
+templates:
+  utter_deny:
+    - "Ok. Have a nice day. Bye."
+  utter_affirm:
+    - "Ok, How may I help you?"
+  utter_thanks:
+    - "You are welcome"
+  utter_negative:
+    - "Ok. No problem. Here are all your incidents:"
+  utter_ask_helpmore:
+    - "is there anything more that I can help with?"
+
+actions:
+  - utter_affirm
+  - utter_deny
+  - utter_thanks
+  - utter_negative
+  - utter_ask_helpmore
+  - app.actions.ActionUtterGoodbye
+  - app.actions.ActionUtterGreet
+  - app.actions.ActionUtterContact

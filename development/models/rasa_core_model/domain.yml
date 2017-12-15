@@ -1,0 +1,34 @@
+action_factory: null
+actions:
+- utter_affirm
+- utter_deny
+- utter_thanks
+- utter_negative
+- utter_ask_helpmore
+- app.actions.ActionUtterGoodbye
+- app.actions.ActionUtterGreet
+- app.actions.ActionUtterContact
+config:
+  store_entities_as_slots: true
+entities: []
+intents:
+- greet
+- affirm
+- deny
+- negative
+- thanks
+- goodbye
+- contact
+slots: {}
+templates:
+  utter_affirm:
+  - text: Ok, How may I help you?
+  utter_ask_helpmore:
+  - text: is there anything more that I can help with?
+  utter_deny:
+  - text: Ok. Have a nice day. Bye.
+  utter_negative:
+  - text: 'Ok. No problem. Here are all your incidents:'
+  utter_thanks:
+  - text: You are welcome
+topics: []

@@ -1,0 +1,16 @@
+{
+  "incident": "application",
+  "incident id": "application",
+  "issue": "application",
+  "ticket": "application",
+  "ticket_id": "application",
+  "close": "resolve",
+  "solve": "resolve",
+  "solved": "resolve",
+  "resolved": "resolve",
+  "closed": "close",
+  "opened": "open",
+  "no": "No",
+  "nah": "No",
+  "nope": "No"
+}

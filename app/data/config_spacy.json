@@ -1,0 +1,9 @@
+{
+  "pipeline": "spacy_sklearn",
+  "path" : "./models",
+  "log_file": "../logs",
+  "duckling_dimensions": ["time", "number", "amount-of-money", "distance"],
+  "log_level": "INFO",
+  "log_file": "/logs",
+  "data" : "./fujitsu/data/testDemo.json"
+}
