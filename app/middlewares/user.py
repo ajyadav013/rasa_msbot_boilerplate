@@ -37,7 +37,7 @@ class User(object):
                     self.unregistered_user_mail_sent = True
                     replyObj.send_reply(  # Asking to provide email address
                         skypedata,
-                        self.service.all_errors['unregistered_user']
+                        "I'm sorry but I can't find your email address, will you please provide your email address to authenticate?"
                     )
                 else:
                     print('Inside register user first else')
