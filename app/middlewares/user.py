@@ -153,18 +153,22 @@ class User(object):
         """
         print('inside createUserOTP')
         try:
+            print('inside createUserOTP first try')
             user = Users.get_or_create(
                 name=user_data['name'],
                 user_id=skypedata['from']['id'][3:],
                 is_active=False)
             try:
+                print('inside createUserOTP second try')
                 otp_obj = OTP.get(user_id=user[0].id)
                 otp_obj.otp = otp
                 otp_obj.save()
             except OTP.DoesNotExist:
+                print('inside createUserOTP first except')
                 OTP.create(user_id=user[0].id, otp=otp)
             return True
         except Exception as e:
+            print('CreateUser OTP exception', e)
             return False
 
 
