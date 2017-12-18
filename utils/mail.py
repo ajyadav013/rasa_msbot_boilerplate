@@ -41,5 +41,7 @@ def send_mail(recepient_email, name, otp):
                      os.environ.get('EMAIL_HOST_PASSWORD'))
         server.sendmail(msg['From'], msg['To'], msg.as_string())
         server.quit()
+        return True
     except Exception as e:
         print('Mail exception', e)
+        return False

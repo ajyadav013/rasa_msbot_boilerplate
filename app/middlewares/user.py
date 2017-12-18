@@ -52,7 +52,7 @@ class User(object):
                             replyObj.send_reply(skypedata, """OTP sent, Check your email and send the OTP here.  **Note- Validity of OTP is 10 minutes""")
                         else:
                             print('Inside register user first else first else')
-                            replyObj.send_reply(skypedata,"""Oops...I think there are some issues while checking the OTP. Please contact System Admin. Thank You :)""")
+                            replyObj.send_reply(skypedata,"""Oops...I think there are some issues while checking the OTP or sending the mail. Please contact System Admin. Thank You :)""")
                     else:  # Email not found
                         print('Inside register user first else second else')
                         # Sent the appropriate messages from verifyUserEmail method so just giving a pass here
@@ -144,8 +144,8 @@ class User(object):
             otp_special_char = os.environ.get('OTP_SPECIAL_CHARACTERS')
             otp = ''.join(random.sample(otp_special_char, 2)) + str(random.randint(10**(digits - 1), 10**digits)) + ''.join(random.sample(otp_special_char, 2))
             if self.createUserOTP(user_data, skypedata, otp):
-                send_mail(user_data['email'], user_data['name'], otp)
-                return True
+                if send_mail(user_data['email'], user_data['name'], otp):
+                    return True
             return False
         except Exception as e:
             print('send OTP except', e)
