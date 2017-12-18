@@ -186,6 +186,8 @@ class MessageProcessor(object):
         # for testing - you can short-cut the NLU part with a message
         # in the format _intent[entity1=val1,entity=val2]
         # parse_data is a dict of intent & entities
+        print('message', message)
+        print('message.text', message.text)
         if message.text.startswith('_'):
             parse_data = RegexInterpreter().parse(message.text)
         else:
