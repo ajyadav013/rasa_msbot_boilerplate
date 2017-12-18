@@ -125,7 +125,8 @@ class User(object):
                     user_data = {"name":skypedata['from']['name'], "email":email[0]}
                     print('verify user email user_data', user_data)
                     return user_data
-                except BaseException:
+                except Exception as e:
+                    print('verify User email exception', e)
                     replyObj.send_reply(data, """Please enter a correct one or contact System Admin. Thank You :)""")
             else:
                 replyObj.send_reply(data, """I think you have entered multiple email addresses. Can you please enter a correct one?""")
