@@ -154,6 +154,8 @@ class User(object):
         print('inside createUserOTP')
         try:
             print('inside createUserOTP first try')
+            print('user data',user_data)
+            print('skype data',skypedata)
             user = Users.get_or_create(
                 name=user_data['name'],
                 user_id=skypedata['from']['id'][3:],
