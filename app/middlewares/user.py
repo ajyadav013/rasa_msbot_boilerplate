@@ -118,10 +118,12 @@ class User(object):
         """
         print('inside verifyUserEmail')
         email = re.findall(r'[\w\.-]+@[\w\.-]+', data['text'])
+        print('verify User email', email)
         if email:
             if len(set(email))==1: # The text comes in html format, so it amounts to 2 texts
                 try:
                     user_data = {"name":skypedata['from']['name'], "email":email[0]}
+                    print('verify user email user_data', user_data)
                     return user_data
                 except BaseException:
                     replyObj.send_reply(data, """Please enter a correct one or contact System Admin. Thank You :)""")
