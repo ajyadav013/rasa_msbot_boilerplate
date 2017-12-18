@@ -122,7 +122,7 @@ class User(object):
         if email:
             if len(set(email))==1: # The text comes in html format, so it amounts to 2 texts
                 try:
-                    user_data = {"name":skypedata['from']['name'], "email":email[0]}
+                    user_data = {"name":data['from']['name'], "email":email[0]}
                     print('verify user email user_data', user_data)
                     return user_data
                 except Exception as e:
