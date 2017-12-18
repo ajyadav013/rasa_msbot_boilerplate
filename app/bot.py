@@ -38,6 +38,7 @@ class Bot():
         try:
             reply = SkypeAPI()
             self.data = req.context['request']
+            print('self.data in bot', self.data)
             if self.data['user'] is not None:
                 self.user_id = self.data['from']['id'][3:]
                 self.channel = self.data['channelId']
