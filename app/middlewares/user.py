@@ -5,13 +5,12 @@ import random
 from app.models.user import (Users, OTP)
 from app.middlewares.database import psql_db
 from app.api.skype import SkypeAPI
-from servicenow.api import ServiceNow
 from utils.mail import send_mail
 
 
 class User(object):
     """
-    Class to check user availablity in servicenow
+    Class to check user availablity
     instance as well as send OTP fro authentication and authenticate
     """
 
@@ -22,7 +21,6 @@ class User(object):
         self.user_registered = False
         self.otp_generated = False
         self.unregistered_user_mail_sent = False
-        self.service = ServiceNow()
 
     def registerUser(self, skypedata, replyObj):
         """
@@ -39,8 +37,7 @@ class User(object):
                     )
                 else:
                     # Received the email address, so validate it with
-                    # servicenow instance
-                    user_data = self.verifyServiceNowUserEmail(skypedata, replyObj)
+                    user_data = self.verifyUserEmail(skypedata, replyObj)
                     if user_data:
                         # if true then generate otp and store it in db
                         if self.sendOTP(user_data, skypedata):
@@ -48,8 +45,8 @@ class User(object):
                             replyObj.send_reply(skypedata, """OTP sent, Check your email and send the OTP here.  **Note- Validity of OTP is 10 minutes""")
                         else:
                             replyObj.send_reply(skypedata,"""Oops...I think there are some issues while checking the OTP. Please contact System Admin. Thank You :)""")
-                    else:  # Email not found in servicenow instance
-                        # Sent the appropriate messages from verifyServiceNowUserEmail method so just giving a pass here
+                    else:  # Email not found
+                        # Sent the appropriate messages from verifyUserEmail method so just giving a pass here
                         pass
             else:  # Received the OTP, so validate it
                 if self.verifyOTP(skypedata):
@@ -69,17 +66,14 @@ class User(object):
             try:
                 OTP.get(user_id=user.id)
                 replyObj.send_reply(skypedata, "Incorrect OTP, please send the correct one.")
-                #return True
             except OTP.DoesNotExist:
                 self.otp_generated = False
                 self.user_registered = False
-                replyObj.send_reply(skypedata, """I think you were off for a long time and the OTP would hav been expired. Can you please provide your servicenow registered email address?""")
-                #return False
+                replyObj.send_reply(skypedata, """I think you were off for a long time and the OTP would hav been expired. Can you please provide your email address?""")
         except Users.DoesNotExist:
             self.user_registered = False
             self.otp_generated = False
-            replyObj.send_reply(skypedata, """I think you were off for a long time or would have entered a wrong email address. Can you please provide your servicenow registered email address?""")
-            #return False
+            replyObj.send_reply(skypedata, """I think you were off for a long time or would have entered a wrong email address. Can you please provide your email address?""")
 
     def verifyOTP(self, skypedata):
         """
@@ -89,7 +83,6 @@ class User(object):
             pattern = '[#!@$%]{{{}}}[\d]{{{}}}[!@#$%]{{{}}}'.format(os.environ.get('OTP_SPECIAL_CHARACTERS_LIMIT'), os.environ.get('OTP_DIGITS_LIMIT'), os.environ.get('OTP_SPECIAL_CHARACTERS_LIMIT'))
             # finds opt from the text entered by the user using regex
             otp = re.findall(pattern, skypedata['text'])
-            #otp = re.findall(r'FUJIAMAZE+[\d]+', skypedata['text'])
             if len(otp)==1 and (otp[0] in skypedata['text'].split()): # using split coz regex gives valid(matching regex) string from an invalid(valid regex but an incorrect otp) one too. it gives @#12345@# from string !@#12345@#$
                 otp_obj = OTP.get(otp=otp[0])
                 user = Users.get(id=otp_obj.user_id)
@@ -101,20 +94,19 @@ class User(object):
         except BaseException as e:
             return False
 
-    def verifyServiceNowUserEmail(self, data, replyObj):
+    def verifyUserEmail(self, data, replyObj):
         """
-        Verify Email with Servicenow instance mail id
+        Verify Email
         """
         email = re.findall(r'[\w\.-]+@[\w\.-]+', data['text'])
         if email:
             if len(set(email))==1: # The text comes in html format, so it amounts to 2 texts
                 try:
-                    user_data = self.service.getData('user', email=email[0])
-                    return user_data['result'][0]
+                    return email[0]
                 except BaseException:
-                    replyObj.send_reply(data, """I'm sorry, your email address doesn't exist in the service now instance. Please enter a correct one or contact System Admin. Thank You :)""")
+                    replyObj.send_reply(data, """Please enter a correct one or contact System Admin. Thank You :)""")
             else:
-                replyObj.send_reply(data, """I think you have entered multiple email addresses. Can you please enter a correct one which corresponds with your servicenow account?""")
+                replyObj.send_reply(data, """I think you have entered multiple email addresses. Can you please enter a correct one?""")
         else:
             replyObj.send_reply(data, """I think you have entered an invalid email address. Can you please send a valid one?""")
         return False
@@ -143,7 +135,6 @@ class User(object):
             user = Users.get_or_create(
                 name=user_data['name'],
                 user_id=skypedata['from']['id'][3:],
-                servicenow_id=user_data['sys_id'],
                 is_active=False)
             try:
                 otp_obj = OTP.get(user_id=user[0].id)

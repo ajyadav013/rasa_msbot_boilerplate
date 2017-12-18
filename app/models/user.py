@@ -8,7 +8,6 @@ class Users(ABS):
     """
     name = peewee.CharField(max_length=100)
     user_id = peewee.CharField(max_length=200, unique=True)
-    servicenow_id = peewee.CharField(max_length=200, unique=True)
     is_active = peewee.BooleanField()
 
 class OTP(ABS):
