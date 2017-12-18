@@ -37,11 +37,15 @@ class Bot():
         """
         try:
             reply = SkypeAPI()
+            print('reply', reply)
             self.data = req.context['request']
-            print('self.data in bot', self.data)
+            print('self.data in bot', self.data, self.data['user'])
             if self.data['user'] is not None:
+                print('inside self.data')
                 self.user_id = self.data['from']['id'][3:]
+                print('inside self.data after assigniong user id')
                 self.channel = self.data['channelId']
+                print('inside self.data after assigning channel')
                 #reply.send_typing(self.data) #Commented because it raise double response problem
                 check_default = self.agent.handle_message(
                     self.data, None,
