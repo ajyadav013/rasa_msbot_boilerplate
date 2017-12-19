@@ -27,6 +27,7 @@ class User(object):
         Checks which scenario the user is
         currently in and send messages accordingly
         """
+        print('Inside register user')
         if self.user_registered is False:
             if self.otp_generated is False:
                 if self.unregistered_user_mail_sent is False:
@@ -167,17 +168,20 @@ class UserMiddleware(User):
             try:
                 print('message data', message_data)
                 user = Users.get(user_id=message_data['from']['id'][3:])
+                print('User', user)
                 if user.is_active is True:
                     message_data['user'] = user
                 else:
                     self.registerUser(message_data, reply)
                     message_data['user'] = None
             except BaseException:
+                print('Inside user except')
                 self.registerUser(message_data, reply)
                 message_data['user'] = None
                 req.context['request'] = message_data
 
         except BaseException:
+            print('Inside user base exception')
             req.context['request'] = {}
 
     def process_response(self, req, resp, resource, request_succeded):
