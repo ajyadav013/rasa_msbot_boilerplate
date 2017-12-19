@@ -136,7 +136,8 @@ class Agent(MessageProcessor):
             print('After tracker')
             processor = self._create_processor(message_preprocessor)
             print('After processor')
-            text_message = data['text']
+            #text_message = data['text']
+            text_message = data
             print('After text_message')
             userMessageObj = UserMessage(text_message, output_channel, sender)
             print('After usermessageobj')

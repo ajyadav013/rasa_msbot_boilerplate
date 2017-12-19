@@ -48,8 +48,11 @@ class Bot():
                 print('inside self.data after assigning channel')
                 #reply.send_typing(self.data) #Commented because it raise double response problem
                 check_default = self.agent.handle_message(
-                    self.data, None,
+                    self.data['text'], None,
                     OutputChannel(self.data))
+                # check_default = self.agent.handle_message(
+                #     self.data['text'], None,
+                #     OutputChannel(self.data))
                 if check_default: # Check default sometimes is returned None by processor.handle_message
                     if (check_default[0] is False):  # The result found by rasa
                         # is below the confidence level set
