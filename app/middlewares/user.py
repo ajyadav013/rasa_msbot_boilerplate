@@ -165,6 +165,7 @@ class UserMiddleware(User):
             message_data = req.context['request']
             reply = SkypeAPI()
             try:
+                print('message data', message_data)
                 user = Users.get(user_id=message_data['from']['id'][3:])
                 if user.is_active is True:
                     message_data['user'] = user
