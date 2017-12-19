@@ -33,6 +33,7 @@ class OutputChannel(OutputChannel):
             print('Exception in send_text_message -', e)
 
     def setOutputInstance(self, data):
+        print('Set Output Instance', data)
         if data['channelId'] == 'skype':
             return SkypeAPI()
         else:

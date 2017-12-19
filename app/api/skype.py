@@ -78,6 +78,7 @@ class SkypeAPI(object):
                 'text': result_string,
                 'replyToId': ActivityRequestObject['id']
             }
+            print('Non reply', non_reply)
             if non_reply:
                 url = str('/v3/conversations/' +
                           ActivityRequestObject['conversation']['id'] +
@@ -87,6 +88,7 @@ class SkypeAPI(object):
                           'v3/conversations/'
                           + ActivityRequestObject['conversation']['id']
                           + '/activities/' + ActivityRequestObject['id'])
+            print('URL', url)
             return requests.post(url, data=json.dumps(
                 ActivityResponseObject), headers=headers)
         except Exception as e:
