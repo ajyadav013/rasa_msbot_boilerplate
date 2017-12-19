@@ -41,7 +41,7 @@ class ActionUtterGreet(Action):
     def run(self, dispatcher, tracker, domain):
         print('Inside greet action')
         print('checking which function called greet')
-        inspect.stack()[1][3]
+        print('Boom Boom',inspect.stack()[1][3])
         print('--------------------------------')
         try:
             sendPredefinedMessage(dispatcher, intent='greet')
