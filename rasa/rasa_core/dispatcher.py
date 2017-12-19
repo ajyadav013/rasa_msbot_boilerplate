@@ -57,7 +57,7 @@ class Dispatcher(object):
     def utter_message(self, text):
         # type: (Text) -> None
         """"Send a text to the output channel"""
-
+        print('Inside rasa core dispatcher utter_message', text)
         if self.sender_id is not None and self.output_channel is not None:
             for message_part in text.split("\n\n"):
                 self.output_channel.send_text_message(self.sender_id, message_part)

@@ -55,6 +55,7 @@ class OutputChannel(object):
     for text only output channels."""
 
     def send_text_message(self, recipient_id, message):
+        print('Inside rasa core output channel send text message', recipient_id, message)
         # type: (Text, Text) -> None
         """Send a message through this channel."""
 
@@ -64,7 +65,7 @@ class OutputChannel(object):
     def send_image_url(self, recipient_id, image_url):
         # type: (Text, Text) -> None
         """Sends an image. Default will just post the url as a string."""
-
+        print('Inside rasa core output channel send image url', recipient_id, message)
         self.send_text_message(recipient_id, "Image: {}".format(image_url))
 
     def send_text_with_buttons(self, recipient_id, message, buttons, **kwargs):
@@ -72,7 +73,7 @@ class OutputChannel(object):
         """Sends buttons to the output.
 
         Default implementation will just post the buttons as a string."""
-
+        print('Inside rasa core output channel send text with buttons', recipient_id, message)
         self.send_text_message(recipient_id, message)
         for idx, button in enumerate(buttons):
             button_msg = "{idx}: {title} ({val})".format(

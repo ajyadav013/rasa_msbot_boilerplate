@@ -22,6 +22,7 @@ class CustomOutput(OutputChannel):
 
     def send_text_message(self, recipient_id, message):
         # you probably use http to send a message
+        print('Inside rasa core custom.py customOutput', message)
         url = self.url
         if self.access_token is not None:
             headers = {"Auth-token": self.access_token}

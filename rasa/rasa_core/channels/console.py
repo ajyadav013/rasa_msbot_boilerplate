@@ -19,6 +19,7 @@ class ConsoleOutputChannel(OutputChannel):
 
     def send_text_message(self, recipient_id, message):
         # type: (Text, Text) -> None
+        print('Inside rasa core console output channel', message)
         utils.print_color(message, self.default_output_color)
 
 

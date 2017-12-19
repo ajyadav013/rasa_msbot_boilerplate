@@ -16,4 +16,5 @@ class CollectingOutputChannel(OutputChannel):
             return None
 
     def send_text_message(self, recipient_id, message):
+        print('Inside rasa core direct.py sollecting output channel', message)
         self.messages.append((recipient_id, message))
