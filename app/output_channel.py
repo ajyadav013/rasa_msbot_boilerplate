@@ -28,13 +28,11 @@ class OutputChannel(OutputChannel):
     def send_text_message(self, recipient_id, message):
         # type: (Text, Text) -> None
         try:
-            print('Inside send_text_message')
             self.reply.send_reply(self.data, message)
         except Exception as e:
             print('Exception in send_text_message -', e)
 
     def setOutputInstance(self, data):
-        print('Inside output channel setOutputInstance method data', data)
         if data['channelId'] == 'skype':
             return SkypeAPI()
         else:

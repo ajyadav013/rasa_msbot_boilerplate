@@ -41,11 +41,6 @@ class Bot():
             if self.data['user'] is not None:
                 self.user_id = self.data['from']['id'][3:]
                 self.channel = self.data['channelId']
-                OutputChannel(self.data)
-                #heck_default = self.agent.handle_message(self.data['text'], None, OutputChannel(self.data))
-                #f check_default: # Check default sometimes is returned None by processor.handle_message
-         #          if (check_default[0] is False):  # The result found by rasa
-                        # is below the confidence level set
-          #             reply.send_reply(self.data, check_default[1])
+                self.agent.handle_message(self.data['text'], None, OutputChannel(self.data))
         except Exception as e:
             print("Exception in bot- ", e)

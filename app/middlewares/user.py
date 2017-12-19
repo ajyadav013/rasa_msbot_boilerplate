@@ -27,45 +27,33 @@ class User(object):
         Checks which scenario the user is
         currently in and send messages accordingly
         """
-        print('Inside register user')
         if self.user_registered is False:
-            print('Inside register user first if')
             if self.otp_generated is False:
-                print('Inside register user second if')
                 if self.unregistered_user_mail_sent is False:
-                    print('Inside register user third if')
                     self.unregistered_user_mail_sent = True
                     replyObj.send_reply(  # Asking to provide email address
                         skypedata,
                         "I'm sorry but I can't find your email address, will you please provide your email address to authenticate?"
                     )
                 else:
-                    print('Inside register user first else')
                     # Received the email address, so validate it with
                     user_data = self.verifyUserEmail(skypedata, replyObj)
                     if user_data:
-                        print('Inside register user first else first if')
                         # if true then generate otp and store it in db
                         if self.sendOTP(user_data, skypedata):
-                            print('Inside register user first else second if')
                             self.otp_generated = True
                             replyObj.send_reply(skypedata, """OTP sent, Check your email and send the OTP here.  **Note- Validity of OTP is 10 minutes""")
                         else:
-                            print('Inside register user first else first else')
                             replyObj.send_reply(skypedata,"""Oops...I think there are some issues while checking the OTP or sending the mail. Please contact System Admin. Thank You :)""")
                     else:  # Email not found
-                        print('Inside register user first else second else')
                         # Sent the appropriate messages from verifyUserEmail method so just giving a pass here
                         pass
             else:  # Received the OTP, so validate it
-                print('Inside register user third else')
                 if self.verifyOTP(skypedata):
-                    print('Inside register user third else first if')
                     replyObj.send_reply(
                         skypedata,
                         "Authentication successful, How can I help you?")
                 else:
-                    print('Inside register user third else second else')
                     # check if otp has expired. If expired then start the whole process again else just ask to send proper otp
                     self.checkOTPExistance(skypedata, replyObj)
                     
@@ -73,21 +61,16 @@ class User(object):
         """
         Check if OTP already exists for the specific email address
         """
-        print('inside checkOTPExistance')
         try:
-            print('inside checkOTPExistance first try')
             user = Users.get(user_id=skypedata['from']['id'][3:])
             try:
-                print('inside checkOTPExistance second try')
                 OTP.get(user_id=user.id)
                 replyObj.send_reply(skypedata, "Incorrect OTP, please send the correct one.")
             except OTP.DoesNotExist:
-                print('inside checkOTPExistance first except')
                 self.otp_generated = False
                 self.user_registered = False
                 replyObj.send_reply(skypedata, """I think you were off for a long time and the OTP would hav been expired. Can you please provide your email address?""")
         except Users.DoesNotExist:
-            print('inside checkOTPExistance second except')
             self.user_registered = False
             self.otp_generated = False
             replyObj.send_reply(skypedata, """I think you were off for a long time or would have entered a wrong email address. Can you please provide your email address?""")
@@ -97,7 +80,6 @@ class User(object):
         Verify OTP with of specific user
         """
         try:
-            print('inside verifyOTP')
             pattern = '[#!@$%]{{{}}}[\d]{{{}}}[!@#$%]{{{}}}'.format(os.environ.get('OTP_SPECIAL_CHARACTERS_LIMIT'), os.environ.get('OTP_DIGITS_LIMIT'), os.environ.get('OTP_SPECIAL_CHARACTERS_LIMIT'))
             # finds opt from the text entered by the user using regex
             otp = re.findall(pattern, skypedata['text'])
@@ -116,17 +98,13 @@ class User(object):
         """
         Verify Email
         """
-        print('inside verifyUserEmail')
         email = re.findall(r'[\w\.-]+@[\w\.-]+', data['text'])
-        print('verify User email', email)
         if email:
             if len(set(email))==1: # The text comes in html format, so it amounts to 2 texts
                 try:
                     user_data = {"name":data['from']['name'], "email":email[0]}
-                    print('verify user email user_data', user_data)
                     return user_data
                 except Exception as e:
-                    print('verify User email exception', e)
                     replyObj.send_reply(data, """Please enter a correct one or contact System Admin. Thank You :)""")
             else:
                 replyObj.send_reply(data, """I think you have entered multiple email addresses. Can you please enter a correct one?""")
@@ -138,7 +116,6 @@ class User(object):
         """
         Sends OTP, based in the number of digits set in environment
         """
-        print('inside sendOTP')
         try:
             digits = int(os.environ.get('OTP_DIGITS_LIMIT'))
             otp_special_char = os.environ.get('OTP_SPECIAL_CHARACTERS')
@@ -155,22 +132,16 @@ class User(object):
         """
         Creates or fetches User and OTP atomically
         """
-        print('inside createUserOTP')
         try:
-            print('inside createUserOTP first try')
-            print('user data',user_data)
-            print('skype data',skypedata)
             user = Users.get_or_create(
                 name=user_data['name'],
                 user_id=skypedata['from']['id'][3:],
                 is_active=False)
             try:
-                print('inside createUserOTP second try')
                 otp_obj = OTP.get(user_id=user[0].id)
                 otp_obj.otp = otp
                 otp_obj.save()
             except OTP.DoesNotExist:
-                print('inside createUserOTP first except')
                 OTP.create(user_id=user[0].id, otp=otp)
             return True
         except Exception as e:
@@ -191,21 +162,16 @@ class UserMiddleware(User):
         Middleware Request
         """
         try:
-            print('Inside process resource first try')
             message_data = req.context['request']
             reply = SkypeAPI()
             try:
-                print('inside process resource second try')
                 user = Users.get(user_id=message_data['from']['id'][3:])
                 if user.is_active is True:
-                    print('inside process resource second try if')
                     message_data['user'] = user
                 else:
-                    print('inside process resource second try else')
                     self.registerUser(message_data, reply)
                     message_data['user'] = None
             except BaseException:
-                print('inside process resource exception')
                 self.registerUser(message_data, reply)
                 message_data['user'] = None
                 req.context['request'] = message_data
