@@ -46,10 +46,10 @@ class Bot():
                 print('inside self.data after assigniong user id')
                 self.channel = self.data['channelId']
                 print('inside self.data after assigning channel')
+                print('Agent', self.agent)
                 #reply.send_typing(self.data) #Commented because it raise double response problem
-                check_default = self.agent.handle_message(
-                    self.data['text'], None,
-                    OutputChannel(self.data))
+                check_default = self.agent.handle_message(self.data['text'], None, OutputChannel(self.data))
+                print('Check default', check_default)
                 # check_default = self.agent.handle_message(
                 #     self.data['text'], None,
                 #     OutputChannel(self.data))
