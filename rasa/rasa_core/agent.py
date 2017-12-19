@@ -96,217 +96,217 @@ class Agent(MessageProcessor):
     #     except Exception as e:
     #         print('Exception in check default ', e)
 
-    def handle_message(
-            self,
-            data,  # type: Data
-            message_preprocessor=None,  # type: Optional[Callable[[Text], Text]]
-            output_channel=None,  # type: Optional[OutputChannel]
-            sender=None  # type: Optional[Text]
-    ):
-        # type: (...) -> Optional[List[Text]]
-        """
+    # def handle_message(
+    #         self,
+    #         data,  # type: Data
+    #         message_preprocessor=None,  # type: Optional[Callable[[Text], Text]]
+    #         output_channel=None,  # type: Optional[OutputChannel]
+    #         sender=None  # type: Optional[Text]
+    # ):
+    #     # type: (...) -> Optional[List[Text]]
+    #     """
 
 
 
-        Handle a single message.
+    #     Handle a single message.
 
-        If a message preprocessor is passed, the message will be passed to that
-        function first and the return value is then used as the
-        input for the dialogue engine.
+    #     If a message preprocessor is passed, the message will be passed to that
+    #     function first and the return value is then used as the
+    #     input for the dialogue engine.
 
-        The return value of this function depends on the `output_channel`. If
-        the output channel is not set, set to `None`, or set
-        to `CollectingOutputChannel` this function will return the messages
-        the bot wants to respond.
+    #     The return value of this function depends on the `output_channel`. If
+    #     the output channel is not set, set to `None`, or set
+    #     to `CollectingOutputChannel` this function will return the messages
+    #     the bot wants to respond.
 
-        :Example:
+    #     :Example:
 
-            >>> from rasa_core.agent import Agent
-            >>> agent = Agent.load("examples/babi/models/policy/current",
-            ... interpreter="examples/babi/models/nlu/current_py2")
-            >>> agent.handle_message("hello")
-            [u'how can I help you?']
+    #         >>> from rasa_core.agent import Agent
+    #         >>> agent = Agent.load("examples/babi/models/policy/current",
+    #         ... interpreter="examples/babi/models/nlu/current_py2")
+    #         >>> agent.handle_message("hello")
+    #         [u'how can I help you?']
 
-        """
+    #     """
 
-        #processor = self._create_processor(message_preprocessor)
-        #return processor.handle_message(
-        #        UserMessage(text_message, output_channel, sender))
-        try:
-            print('Inside handle message')
-            tracker = self._get_tracker(sender)
-            print('After tracker')
-            processor = self._create_processor(message_preprocessor)
-            print('After processor')
-            text_message = data['text']
-            #text_message = data
-            print('After text_message')
-            userMessageObj = UserMessage(text_message, output_channel, sender)
-            print('After usermessageobj')
-            parsed_data = processor._parse_message(userMessageObj)
-            print('After parsed data')
-            print('Parsed data -', parsed_data)
-            if (tracker.get_slot('is_short_description') == True):
-                parsed_data['intent']['name'] = 'knowledge'
-                parsed_data['intent']['confidence'] = 0.8
-                tracker.slots['is_short_description'] = False
-                return processor.handle_message(userMessageObj)
-            elif (self.check_for_default(parsed_data)):
-                return processor.handle_message(userMessageObj)
-            else:
-                print('Unanswered_query-', text_message)
-                return (False, "Sorry, I did not understand what you said.")
-        except Exception as e:
-            print('Exception in agent ', e)
-            return (False, "Sorry, I did not understand what you said.")
+    #     #processor = self._create_processor(message_preprocessor)
+    #     #return processor.handle_message(
+    #     #        UserMessage(text_message, output_channel, sender))
+    #     try:
+    #         print('Inside handle message')
+    #         tracker = self._get_tracker(sender)
+    #         print('After tracker')
+    #         processor = self._create_processor(message_preprocessor)
+    #         print('After processor')
+    #         text_message = data['text']
+    #         #text_message = data
+    #         print('After text_message')
+    #         userMessageObj = UserMessage(text_message, output_channel, sender)
+    #         print('After usermessageobj')
+    #         parsed_data = processor._parse_message(userMessageObj)
+    #         print('After parsed data')
+    #         print('Parsed data -', parsed_data)
+    #         if (tracker.get_slot('is_short_description') == True):
+    #             parsed_data['intent']['name'] = 'knowledge'
+    #             parsed_data['intent']['confidence'] = 0.8
+    #             tracker.slots['is_short_description'] = False
+    #             return processor.handle_message(userMessageObj)
+    #         elif (self.check_for_default(parsed_data)):
+    #             return processor.handle_message(userMessageObj)
+    #         else:
+    #             print('Unanswered_query-', text_message)
+    #             return (False, "Sorry, I did not understand what you said.")
+    #     except Exception as e:
+    #         print('Exception in agent ', e)
+    #         return (False, "Sorry, I did not understand what you said.")
 
-    def start_message_handling(self,
-                               text_message,
-                               sender=None):
-        # type: (Text, Optional[Text]) -> Dict[Text, Any]
-        print('Inside agent start_message_handling')
-        processor = self._create_processor()
-        return processor.start_message_handling(
-                UserMessage(text_message, None, sender))
+    # def start_message_handling(self,
+    #                            text_message,
+    #                            sender=None):
+    #     # type: (Text, Optional[Text]) -> Dict[Text, Any]
+    #     print('Inside agent start_message_handling')
+    #     processor = self._create_processor()
+    #     return processor.start_message_handling(
+    #             UserMessage(text_message, None, sender))
 
-    def continue_message_handling(self, sender_id, executed_action, events):
-        # type: (Text, Text, List[Event]) -> Dict[Text, Any]
-        print('Inside agent continue_message_handling')
-        processor = self._create_processor()
-        return processor.continue_message_handling(sender_id,
-                                                   executed_action,
-                                                   events)
+    # def continue_message_handling(self, sender_id, executed_action, events):
+    #     # type: (Text, Text, List[Event]) -> Dict[Text, Any]
+    #     print('Inside agent continue_message_handling')
+    #     processor = self._create_processor()
+    #     return processor.continue_message_handling(sender_id,
+    #                                                executed_action,
+    #                                                events)
 
-    def handle_channel(self, input_channel,
-                       message_preprocessor=None):
-        print('Inside agent handle_channel')
-        # type: (InputChannel, Optional[Callable[[Text], Text]]) -> None
-        """Handle messages coming from the channel."""
+    # def handle_channel(self, input_channel,
+    #                    message_preprocessor=None):
+    #     print('Inside agent handle_channel')
+    #     # type: (InputChannel, Optional[Callable[[Text], Text]]) -> None
+    #     """Handle messages coming from the channel."""
 
-        processor = self._create_processor(message_preprocessor)
-        processor.handle_channel(input_channel)
+    #     processor = self._create_processor(message_preprocessor)
+    #     processor.handle_channel(input_channel)
 
-    def toggle_memoization(self, activate):
-        # type: (bool) -> None
-        """Toggles the memoization on and off.
+    # def toggle_memoization(self, activate):
+    #     # type: (bool) -> None
+    #     """Toggles the memoization on and off.
 
-        If a memoization policy is present in the ensemble, this will toggle
-        the prediction of that policy. When set to `false` the Memoization
-        policies present in the policy ensemble will not make any predictions.
-        Hence, the prediction result from the ensemble always needs to come
-        from a different policy (e.g. `KerasPolicy`). Useful to test prediction
-        capabilities of an ensemble when ignoring memorized turns from the
-        training data."""
-        print('Inside agent toggle_memoization')
-        for p in self.policy_ensemble.policies:
-            # explicitly ignore inheritance (e.g. scoring policy)
-            if type(p) == MemoizationPolicy:
-                p.toggle(activate)
+    #     If a memoization policy is present in the ensemble, this will toggle
+    #     the prediction of that policy. When set to `false` the Memoization
+    #     policies present in the policy ensemble will not make any predictions.
+    #     Hence, the prediction result from the ensemble always needs to come
+    #     from a different policy (e.g. `KerasPolicy`). Useful to test prediction
+    #     capabilities of an ensemble when ignoring memorized turns from the
+    #     training data."""
+    #     print('Inside agent toggle_memoization')
+    #     for p in self.policy_ensemble.policies:
+    #         # explicitly ignore inheritance (e.g. scoring policy)
+    #         if type(p) == MemoizationPolicy:
+    #             p.toggle(activate)
 
-    def train(self, filename=None, **kwargs):
-        print('Inside agent train')
-        # type: (Optional[Text], **Any) -> None
-        """Train the policies / policy ensemble using dialogue data from file"""
+    # def train(self, filename=None, **kwargs):
+    #     print('Inside agent train')
+    #     # type: (Optional[Text], **Any) -> None
+    #     """Train the policies / policy ensemble using dialogue data from file"""
 
-        trainer = PolicyTrainer(self.policy_ensemble, self.domain,
-                                self.featurizer)
-        trainer.train(filename, **kwargs)
+    #     trainer = PolicyTrainer(self.policy_ensemble, self.domain,
+    #                             self.featurizer)
+    #     trainer.train(filename, **kwargs)
 
-    def train_online(self,
-                     filename=None,
-                     input_channel=None,
-                     **kwargs):
-        print('Inside agent train_online')
-        # type: (Optional[Text], Optional[InputChannel], **Any) -> None
-        """Runs an online training session on the set policies / ensemble.
+    # def train_online(self,
+    #                  filename=None,
+    #                  input_channel=None,
+    #                  **kwargs):
+    #     print('Inside agent train_online')
+    #     # type: (Optional[Text], Optional[InputChannel], **Any) -> None
+    #     """Runs an online training session on the set policies / ensemble.
 
-        The policies will be pretrained using the data from `filename`.
-        After that the model will get trained on dialogues from the input
-        channel. During the dialogue the annotations and state of the agent
-        can be changed to correct wrong behaviour."""
+    #     The policies will be pretrained using the data from `filename`.
+    #     After that the model will get trained on dialogues from the input
+    #     channel. During the dialogue the annotations and state of the agent
+    #     can be changed to correct wrong behaviour."""
 
-        if not self.interpreter:
-            raise ValueError(
-                    "When using online learning, you need to specify "
-                    "an interpreter for the agent to use.")
-        trainer = OnlinePolicyTrainer(self.policy_ensemble, self.domain,
-                                      self.featurizer)
-        trainer.train(filename, self.interpreter, input_channel, **kwargs)
+    #     if not self.interpreter:
+    #         raise ValueError(
+    #                 "When using online learning, you need to specify "
+    #                 "an interpreter for the agent to use.")
+    #     trainer = OnlinePolicyTrainer(self.policy_ensemble, self.domain,
+    #                                   self.featurizer)
+    #     trainer.train(filename, self.interpreter, input_channel, **kwargs)
 
-    def persist(self, model_path):
-        # type: (Text) -> None
-        print('Inside agent persist')
-        """Persists this agent into a directory for later loading and usage."""
+    # def persist(self, model_path):
+    #     # type: (Text) -> None
+    #     print('Inside agent persist')
+    #     """Persists this agent into a directory for later loading and usage."""
 
-        self.policy_ensemble.persist(model_path)
-        self.domain.persist(os.path.join(model_path, "domain.yml"))
-        self.domain.persist_specification(model_path)
-        self.featurizer.persist(model_path)
+    #     self.policy_ensemble.persist(model_path)
+    #     self.domain.persist(os.path.join(model_path, "domain.yml"))
+    #     self.domain.persist_specification(model_path)
+    #     self.featurizer.persist(model_path)
 
-    def _ensure_agent_is_prepared(self):
-        # type: () -> None
-        print('Inside agent _ensure_agent_is_prepared')
-        """Checks that an interpreter and a tracker store are set.
+    # def _ensure_agent_is_prepared(self):
+    #     # type: () -> None
+    #     print('Inside agent _ensure_agent_is_prepared')
+    #     """Checks that an interpreter and a tracker store are set.
 
-        Necessary before a processor can be instantiated from this agent.
-        Raises an exception if any argument is missing."""
+    #     Necessary before a processor can be instantiated from this agent.
+    #     Raises an exception if any argument is missing."""
 
-        if self.interpreter is None or self.tracker_store is None:
-            raise Exception(
-                    "Agent needs to be prepared before usage. "
-                    "You need to set an interpreter as well "
-                    "as a tracker store.")
+    #     if self.interpreter is None or self.tracker_store is None:
+    #         raise Exception(
+    #                 "Agent needs to be prepared before usage. "
+    #                 "You need to set an interpreter as well "
+    #                 "as a tracker store.")
 
-    def _create_processor(self, preprocessor=None):
-        print('Inside agent _create_processor')
-        # type: (Callable[[Text], Text]) -> MessageProcessor
-        """Instantiates a processor based on the set state of the agent."""
-        print('Inside _create_processor')
-        self._ensure_agent_is_prepared()
-        return MessageProcessor(
-                self.interpreter, self.policy_ensemble, self.domain,
-                self.tracker_store, message_preprocessor=preprocessor)
+    # def _create_processor(self, preprocessor=None):
+    #     print('Inside agent _create_processor')
+    #     # type: (Callable[[Text], Text]) -> MessageProcessor
+    #     """Instantiates a processor based on the set state of the agent."""
+    #     print('Inside _create_processor')
+    #     self._ensure_agent_is_prepared()
+    #     return MessageProcessor(
+    #             self.interpreter, self.policy_ensemble, self.domain,
+    #             self.tracker_store, message_preprocessor=preprocessor)
 
-    @classmethod
-    def _create_featurizer(cls, featurizer):
-        print('Inside agent _create_featurizer')
-        return featurizer if featurizer is not None else BinaryFeaturizer()
+    # @classmethod
+    # def _create_featurizer(cls, featurizer):
+    #     print('Inside agent _create_featurizer')
+    #     return featurizer if featurizer is not None else BinaryFeaturizer()
 
-    @classmethod
-    def _create_domain(cls, domain):
-        print('Inside agent _create_domain')
-        if isinstance(domain, str):
-            return TemplateDomain.load(domain)
-        elif isinstance(domain, Domain):
-            return domain
-        else:
-            raise ValueError(
-                    "Invalid param `domain`. Expected a path to a domain "
-                    "specification or a domain instance. But got "
-                    "type '{}' with value '{}'".format(type(domain), domain))
+    # @classmethod
+    # def _create_domain(cls, domain):
+    #     print('Inside agent _create_domain')
+    #     if isinstance(domain, str):
+    #         return TemplateDomain.load(domain)
+    #     elif isinstance(domain, Domain):
+    #         return domain
+    #     else:
+    #         raise ValueError(
+    #                 "Invalid param `domain`. Expected a path to a domain "
+    #                 "specification or a domain instance. But got "
+    #                 "type '{}' with value '{}'".format(type(domain), domain))
 
-    @classmethod
-    def _create_tracker_store(cls, store, domain):
-        print('Inside agent _create_tracker_store')
-        return store if store is not None else InMemoryTrackerStore(domain)
+    # @classmethod
+    # def _create_tracker_store(cls, store, domain):
+    #     print('Inside agent _create_tracker_store')
+    #     return store if store is not None else InMemoryTrackerStore(domain)
 
-    @staticmethod
-    def _create_interpreter(interp):
-        print('Inside agent _create_interpreter')
-        return NaturalLanguageInterpreter.create(interp)
+    # @staticmethod
+    # def _create_interpreter(interp):
+    #     print('Inside agent _create_interpreter')
+    #     return NaturalLanguageInterpreter.create(interp)
 
-    @staticmethod
-    def _create_ensemble(policies):
-        print('Inside agent _create_ensemble')
-        if policies is None:
-            return SimplePolicyEnsemble([MemoizationPolicy])
-        if isinstance(policies, list):
-            return SimplePolicyEnsemble(policies)
-        elif isinstance(policies, PolicyEnsemble):
-            return policies
-        else:
-            passed_type = type(policies).__name__
-            raise ValueError(
-                    "Invalid param `policies`. Passed object is "
-                    "of type '{}', but should be policy, an array of "
-                    "policies, or a policy ensemble".format(passed_type))
+    # @staticmethod
+    # def _create_ensemble(policies):
+    #     print('Inside agent _create_ensemble')
+    #     if policies is None:
+    #         return SimplePolicyEnsemble([MemoizationPolicy])
+    #     if isinstance(policies, list):
+    #         return SimplePolicyEnsemble(policies)
+    #     elif isinstance(policies, PolicyEnsemble):
+    #         return policies
+    #     else:
+    #         passed_type = type(policies).__name__
+    #         raise ValueError(
+    #                 "Invalid param `policies`. Passed object is "
+    #                 "of type '{}', but should be policy, an array of "
+    #                 "policies, or a policy ensemble".format(passed_type))
