@@ -1,6 +1,7 @@
 import requests
 import difflib
 import os
+import inspect
 
 from rasa_core.actions.action import Action
 from rasa_core.events import SlotSet
@@ -39,6 +40,9 @@ class ActionUtterGreet(Action):
 
     def run(self, dispatcher, tracker, domain):
         print('Inside greet action')
+        print('checking which function called greet')
+        inspect.stack()[1][3]
+        print('--------------------------------')
         try:
             sendPredefinedMessage(dispatcher, intent='greet')
             return resetTracker(tracker)
