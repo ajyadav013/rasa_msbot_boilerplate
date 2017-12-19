@@ -41,30 +41,30 @@ class OutputChannel(OutputChannel):
             pass
 
 
-class ConsoleInputChannel(InputChannel):
-    """
-    Input channel that reads the user messages from the command line.
-    """
+# class ConsoleInputChannel(InputChannel):
+#     """
+#     Input channel that reads the user messages from the command line.
+#     """
 
-    def __init__(self, data):
-        self.data = data
+#     def __init__(self, data):
+#         self.data = data
 
-    def _record_messages(self, on_message, max_message_limit=None):
-        if six.PY2:
-            # in python 2 input doesn't return unicode values
-            self.text = self.text.decode("utf-8")
-        try:
-            on_message(UserMessage(
-                self.data["text"], ConsoleOutputChannel(self.data)))
-        except Exception as e:
-            # on_message(UserMessage('Error message',
-            # ConsoleOutputChannel(self.data)))
-            print("Exception in channel- ", e)
-            pass  # will resolve this later based
-        # on the default message to print when error occurs
+#     def _record_messages(self, on_message, max_message_limit=None):
+#         if six.PY2:
+#             # in python 2 input doesn't return unicode values
+#             self.text = self.text.decode("utf-8")
+#         try:
+#             on_message(UserMessage(
+#                 self.data["text"], ConsoleOutputChannel(self.data)))
+#         except Exception as e:
+#             # on_message(UserMessage('Error message',
+#             # ConsoleOutputChannel(self.data)))
+#             print("Exception in channel- ", e)
+#             pass  # will resolve this later based
+#         # on the default message to print when error occurs
 
-    def start_async_listening(self, message_queue):
-        self._record_messages(message_queue.enqueue)
+#     def start_async_listening(self, message_queue):
+#         self._record_messages(message_queue.enqueue)
 
-    def start_sync_listening(self, message_handler):
-        self._record_messages(message_handler)
+#     def start_sync_listening(self, message_handler):
+#         self._record_messages(message_handler)
