@@ -28,13 +28,14 @@ class Agent(MessageProcessor):
 
      This includes e.g. train an assistant, or handle messages
      with an assistant."""
-
+    print('Inside Agent class')
     def __init__(self,
                  domain,
                  policies=None,
                  featurizer=None,
                  interpreter=None,
                  tracker_store=None):
+        print('Inside agent init')
         self.domain = self._create_domain(domain)
         self.featurizer = self._create_featurizer(featurizer)
         self.policy_ensemble = self._create_ensemble(policies)
@@ -66,6 +67,7 @@ class Agent(MessageProcessor):
         Check if confidence is above MINIMUM SUCCESSFUL INTENT or not
         '''
         try:
+            print('Inside agent check_for_default')
             from app.models.logging import Logging
             confidence = parsed_data['intent']['confidence']
             if (confidence <= float(os.environ.get('MINIMUM_TRAINING_INTENT_CONFIDENCE'))):
@@ -162,14 +164,14 @@ class Agent(MessageProcessor):
                                text_message,
                                sender=None):
         # type: (Text, Optional[Text]) -> Dict[Text, Any]
-
+        print('Inside agent start_message_handling')
         processor = self._create_processor()
         return processor.start_message_handling(
                 UserMessage(text_message, None, sender))
 
     def continue_message_handling(self, sender_id, executed_action, events):
         # type: (Text, Text, List[Event]) -> Dict[Text, Any]
-
+        print('Inside agent continue_message_handling')
         processor = self._create_processor()
         return processor.continue_message_handling(sender_id,
                                                    executed_action,
@@ -177,6 +179,7 @@ class Agent(MessageProcessor):
 
     def handle_channel(self, input_channel,
                        message_preprocessor=None):
+        print('Inside agent handle_channel')
         # type: (InputChannel, Optional[Callable[[Text], Text]]) -> None
         """Handle messages coming from the channel."""
 
@@ -194,13 +197,14 @@ class Agent(MessageProcessor):
         from a different policy (e.g. `KerasPolicy`). Useful to test prediction
         capabilities of an ensemble when ignoring memorized turns from the
         training data."""
-
+        print('Inside agent toggle_memoization')
         for p in self.policy_ensemble.policies:
             # explicitly ignore inheritance (e.g. scoring policy)
             if type(p) == MemoizationPolicy:
                 p.toggle(activate)
 
     def train(self, filename=None, **kwargs):
+        print('Inside agent train')
         # type: (Optional[Text], **Any) -> None
         """Train the policies / policy ensemble using dialogue data from file"""
 
@@ -212,6 +216,7 @@ class Agent(MessageProcessor):
                      filename=None,
                      input_channel=None,
                      **kwargs):
+        print('Inside agent train_online')
         # type: (Optional[Text], Optional[InputChannel], **Any) -> None
         """Runs an online training session on the set policies / ensemble.
 
@@ -230,6 +235,7 @@ class Agent(MessageProcessor):
 
     def persist(self, model_path):
         # type: (Text) -> None
+        print('Inside agent persist')
         """Persists this agent into a directory for later loading and usage."""
 
         self.policy_ensemble.persist(model_path)
@@ -239,6 +245,7 @@ class Agent(MessageProcessor):
 
     def _ensure_agent_is_prepared(self):
         # type: () -> None
+        print('Inside agent _ensure_agent_is_prepared')
         """Checks that an interpreter and a tracker store are set.
 
         Necessary before a processor can be instantiated from this agent.
@@ -251,6 +258,7 @@ class Agent(MessageProcessor):
                     "as a tracker store.")
 
     def _create_processor(self, preprocessor=None):
+        print('Inside agent _create_processor')
         # type: (Callable[[Text], Text]) -> MessageProcessor
         """Instantiates a processor based on the set state of the agent."""
         print('Inside _create_processor')
@@ -261,10 +269,12 @@ class Agent(MessageProcessor):
 
     @classmethod
     def _create_featurizer(cls, featurizer):
+        print('Inside agent _create_featurizer')
         return featurizer if featurizer is not None else BinaryFeaturizer()
 
     @classmethod
     def _create_domain(cls, domain):
+        print('Inside agent _create_domain')
         if isinstance(domain, str):
             return TemplateDomain.load(domain)
         elif isinstance(domain, Domain):
@@ -277,14 +287,17 @@ class Agent(MessageProcessor):
 
     @classmethod
     def _create_tracker_store(cls, store, domain):
+        print('Inside agent _create_tracker_store')
         return store if store is not None else InMemoryTrackerStore(domain)
 
     @staticmethod
     def _create_interpreter(interp):
+        print('Inside agent _create_interpreter')
         return NaturalLanguageInterpreter.create(interp)
 
     @staticmethod
     def _create_ensemble(policies):
+        print('Inside agent _create_ensemble')
         if policies is None:
             return SimplePolicyEnsemble([MemoizationPolicy])
         if isinstance(policies, list):

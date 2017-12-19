@@ -53,9 +53,9 @@ class Bot():
                 # check_default = self.agent.handle_message(
                 #     self.data['text'], None,
                 #     OutputChannel(self.data))
-                #if check_default: # Check default sometimes is returned None by processor.handle_message
-                #    if (check_default[0] is False):  # The result found by rasa
-                #        # is below the confidence level set
-                #        reply.send_reply(self.data, check_default[1])
+                if check_default: # Check default sometimes is returned None by processor.handle_message
+                    if (check_default[0] is False):  # The result found by rasa
+                        # is below the confidence level set
+                        reply.send_reply(self.data, check_default[1])
         except Exception as e:
             print("Exception in bot- ", e)
