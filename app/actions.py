@@ -38,6 +38,7 @@ class ActionUtterGreet(Action):
         return 'action_utter_greet'
 
     def run(self, dispatcher, tracker, domain):
+        print('Inside greet action')
         try:
             sendPredefinedMessage(dispatcher, intent='greet')
             return resetTracker(tracker)
@@ -54,6 +55,7 @@ class ActionUtterGoodbye(Action):
 
     def run(self, dispatcher, tracker, domain):
         try:
+            print('Inside goodbye action')
             sendPredefinedMessage(dispatcher, intent='goodbye')
             return resetTracker(tracker)
 
@@ -68,6 +70,7 @@ class ActionUtterContact(Action):
 
     def run(self, dispatcher, tracker, domain):
         try:
+            print('Inside contact action')
             description = "Hi, you can contact me on my email - ".format(os.environ.get('COMMON_CONTACT_EMAIL'))
             dispatcher.utter_message(description)
             return resetTracker(tracker)
