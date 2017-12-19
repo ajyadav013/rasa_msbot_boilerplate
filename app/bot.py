@@ -37,25 +37,15 @@ class Bot():
         """
         try:
             reply = SkypeAPI()
-            print('reply', reply)
             self.data = req.context['request']
-            print('self.data in bot', self.data, self.data['user'])
             if self.data['user'] is not None:
-                print('inside self.data')
                 self.user_id = self.data['from']['id'][3:]
-                print('inside self.data after assigniong user id')
                 self.channel = self.data['channelId']
-                print('inside self.data after assigning channel')
-                print('Agent', self.agent)
-                #reply.send_typing(self.data) #Commented because it raise double response problem
-                check_default = self.agent.handle_message(self.data['text'], None, OutputChannel(self.data))
-                print('Check default', check_default)
-                # check_default = self.agent.handle_message(
-                #     self.data['text'], None,
-                #     OutputChannel(self.data))
-                if check_default: # Check default sometimes is returned None by processor.handle_message
-                    if (check_default[0] is False):  # The result found by rasa
+                OutputChannel(self.data)
+                #heck_default = self.agent.handle_message(self.data['text'], None, OutputChannel(self.data))
+                #f check_default: # Check default sometimes is returned None by processor.handle_message
+         #          if (check_default[0] is False):  # The result found by rasa
                         # is below the confidence level set
-                        reply.send_reply(self.data, check_default[1])
+          #             reply.send_reply(self.data, check_default[1])
         except Exception as e:
             print("Exception in bot- ", e)

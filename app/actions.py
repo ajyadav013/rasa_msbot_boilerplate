@@ -39,10 +39,6 @@ class ActionUtterGreet(Action):
         return 'action_utter_greet'
 
     def run(self, dispatcher, tracker, domain):
-        print('Inside greet action')
-        print('checking which function called greet')
-        print('Boom Boom',inspect.stack()[1][3])
-        print('--------------------------------')
         try:
             sendPredefinedMessage(dispatcher, intent='greet')
             return resetTracker(tracker)
