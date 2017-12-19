@@ -84,11 +84,17 @@ class SkypeAPI(object):
                           ActivityRequestObject['conversation']['id'] +
                           '/activities')
             else:
-                url = str(ActivityRequestObject['serviceUrl'] +
-                          'v3/conversations/'
-                          + ActivityRequestObject['conversation']['id']
-                          + '/activities/' + ActivityRequestObject['id'])
-            print('URL', url)
+                if ActivityRequestObject['serviceUrl'][-1] == '/':
+                    url = str(ActivityRequestObject['serviceUrl'] +
+                              'v3/conversations/'
+                              + ActivityRequestObject['conversation']['id']
+                              + '/activities/' + ActivityRequestObject['id'])
+                else:
+                    url = str(ActivityRequestObject['serviceUrl'] + '/' +
+                              'v3/conversations/'
+                              + ActivityRequestObject['conversation']['id']
+                              + '/activities/' + ActivityRequestObject['id'])
+                print('URL', url)
             return requests.post(url, data=json.dumps(
                 ActivityResponseObject), headers=headers)
         except Exception as e:
