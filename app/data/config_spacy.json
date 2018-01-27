@@ -5,5 +5,5 @@
   "duckling_dimensions": ["time", "number", "amount-of-money", "distance"],
   "log_level": "INFO",
   "log_file": "/logs",
-  "data" : "./fujitsu/data/testDemo.json"
+  "data" : "./development/data/testDemo.json"
 }

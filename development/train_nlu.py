@@ -8,6 +8,8 @@ import sys
 from rasa_nlu.converters import load_data
 from rasa_nlu.config import RasaNLUConfig
 from rasa_nlu.model import Trainer
+from rasa_nlu.components import ComponentBuilder
+
 
 CWD = os.path.dirname(os.path.realpath(__file__))
 sys.path.append('/'.join(i for i in CWD.split('/')[:-1]))
@@ -20,8 +22,9 @@ RASA_NLU_MODEL_NAME = os.environ.get('RASA_NLU_MODEL_NAME')
 
 def train_nlu_model():
     try:
+        builder = ComponentBuilder(use_cache=True)  # will cache components between pipelines (where possible)
         training_data = load_data(RASA_NLU_TRAINING_DATA_PATH)
-        trainer = Trainer(RasaNLUConfig(RASA_NLU_CONFIG_PATH))
+        trainer = Trainer(RasaNLUConfig(RASA_NLU_CONFIG_PATH), builder)
         trainer.train(training_data)
         model_directory = trainer.persist(
                 RASA_NLU_MODEL_PATH, fixed_model_name=RASA_NLU_MODEL_NAME)

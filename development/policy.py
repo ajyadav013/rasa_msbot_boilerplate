@@ -1,5 +1,7 @@
 import logging
 from rasa_core.policies.keras_policy import KerasPolicy
+from rasa_nlu.components import ComponentBuilder
+
 
 logger = logging.getLogger(__name__)
 
